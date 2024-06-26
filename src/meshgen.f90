@@ -167,6 +167,27 @@ subroutine setElementMaterial(elemCount, elementCenterCoor)
         mat(elemCount,1)  = material(1,1)
         mat(elemCount,2)  = material(1,2)
         mat(elemCount,3)  = material(1,3)
+    elseif (nmat == 2 .and. n2mat == 6) then
+        ! modified from above homogenous for a fault zone around one fault
+        ! material = material(i,j), i=1,nmat, and j=1,6
+        ! for i
+        !   1: background material
+        !   2: fault zone material
+        ! for j
+        !   1: left edge of fault zone in m
+        !   2: right edge of fault zone in m
+        !   3: bottom of fault zone in m
+        !   4: Vp, m/s
+        !   5: Vs, m/s
+        !   6: rho, kg/m3
+        if(elementCenterCoor(1) >= material(2,1) .and. elementCenterCoor(1) &
+                <= material(2,2) .and. elementCenterCoor(2) >=fltStr(1) &
+                .and. elementCenterCoor(2) <=fltstr(2) .and. elementCenterCoor(3) &
+                >= material(2,3) then !this is for fault strike along y case.
+            mat(elemCount,1) = material(2,4)
+            mat(elemCount,2) = material(2,5)
+            mat(elemCount,3) = material(2,6)
+        endif
     elseif (nmat > 1 .and. n2mat == 4) then 
         ! 1D velocity structure
         ! material = material(i,j), i=1,nmat, and j=1,4
